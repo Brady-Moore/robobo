@@ -4,6 +4,9 @@ class ConversationsController < ApplicationController
   end
 
   def show
+    @conversation = Conversation.find(params[:id])
+    @responses = @conversation.responses
+    @response = Response.new
   end
 
   def new
@@ -14,6 +17,8 @@ class ConversationsController < ApplicationController
 
   def destroy
   end
+
+
 # ----------------------------------------------------------------------------------#
 # TODO: make the user able to edit the conversation title (FOR LATER IF POSSIBLE)
   # def edit
