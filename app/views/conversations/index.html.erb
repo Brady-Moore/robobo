@@ -1,2 +1,19 @@
-<h1>Conversations#index</h1>
-<p>Find me in app/views/conversations/index.html.erb</p>
+<div class="d-flex justify-content-center">
+  <%= image_tag "robobo.png", alt: "Robobo Mascot", width: 80 %>
+  <h1 class="mt-5">Our past conversations</h1>
+</div>
+
+<div class="container-sm">
+  <div class="row align-items-center">
+    <% @conversations.each do |conversation| %>
+    <div class="col-3">
+      <span class="ic--twotone-menu-book"></span>
+    </div>
+    <div class="col-9 title-container">
+      <h3 class="mt-2"><%= conversation.title %></h3>
+    </div>
+    <% end %>
+  </div>
+</div>
+
+

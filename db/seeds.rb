@@ -7,3 +7,8 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+
+# temporary testing
+User.create!(name: 'Pedro', password: 'abc123', email: 'pedro@email.com' )
+
+Conversation.create!(user: User.last, submitted_text: 'abcdefg', title: 'Test')
