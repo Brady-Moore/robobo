@@ -3,7 +3,8 @@ Rails.application.routes.draw do
 
   devise_for :users
 
-    resources :conversations do
-      resources :responses, only: [:index, :create]
-    end
+  resources :users, only: [:show]
+  resources :conversations, except: [:edit, :update] do
+    resources :responses, only: [:create]
+  end
 end
