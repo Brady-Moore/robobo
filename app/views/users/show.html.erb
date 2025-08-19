@@ -3,8 +3,8 @@
   <div class="card mb-4">
     <div class="card-body">
       <p><strong>Email:</strong> <%= @user.email %></p>
-      <p><strong>Name:</strong> <%= @user.name.presence || "—" %></p>
-      <p><strong>JLPT Level:</strong> <%= @user.jlpt_level.presence || "—" %></p>
+      <!-- <p><strong>Name:</strong> <%#= @user.name.presence || "—" %></p>
+      <p><strong>JLPT Level:</strong> <%#= @user.jlpt_level.presence || "—" %></p> -->
       <%= link_to "Edit account", edit_user_registration_path, class: "btn btn-outline-primary" %>
     </div>
   </div>
@@ -25,7 +25,6 @@
             </strong>
             <div class="text-muted small">
               <%= time_ago_in_words(c.created_at) %> ago
-              <!-- or: <%= l c.created_at, format: :short %> -->
             </div>
           </div>
           <%= link_to "Open", conversation_path(c), class: "btn btn-sm btn-primary" %>
