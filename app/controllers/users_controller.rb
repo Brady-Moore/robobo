@@ -1,6 +1,8 @@
 class UsersController < ApplicationController
+  before_action :authenticate_user!
+  before_action :set_user
   def show
-    @conversations = @user.conversations.order(created_at: :desc)
+    # @conversations = @user.conversations.order(created_at: :desc)
   end
 
   private
