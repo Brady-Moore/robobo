@@ -8,4 +8,8 @@ Rails.application.routes.draw do
       resources :responses, only: [:index, :create, :show]
     end
   end
+<<<<<<< HEAD
 end
+=======
+end
+>>>>>>> deaf45c0398b371dbb0c0f3c4e478df2c38d522e
