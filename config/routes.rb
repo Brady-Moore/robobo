@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  root "pages#home"
+  root "conversations#new"
 
   devise_for :users
 
