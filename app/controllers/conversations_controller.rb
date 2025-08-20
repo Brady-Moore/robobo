@@ -1,30 +1,45 @@
 class ConversationsController < ApplicationController
+  before_action :authenticate_user!, except: [:new]
+  before_action :set_conversation, only: [:show, :destroy]
+
   def index
-    @conversations = Conversations.all
+    @conversations = current_user.conversations.order(created_at: :desc)
   end
 
   def show
-    @conversation = Conversation.find(params[:id])
-    @responses = @conversation.responses
-    @response = Response.new
+    @conversation = current_user.conversations.find(params[:id])
+    @responses    = @conversation.responses.order(:created_at)
+    @response     = @conversation.responses.new
   end
 
   def new
+    @conversation = Conversation.new
+    @demo_conversation = Conversation.find_by(title: "Demo Conversation")
   end
 
   def create
+    @conversation = current_user.conversations.new(conversation_params)
+    if @conversation.save
+      redirect_to @conversation, notice: "Conversation started!"
+    else
+      render :new, status: :unprocessable_entity
+    end
   end
 
   def destroy
+    @conversation.destroy
+    redirect_to conversations_path, notice: "Conversation deleted"
   end
 
+  private
 
-# ----------------------------------------------------------------------------------#
-# TODO: make the user able to edit the conversation title (FOR LATER IF POSSIBLE)
-  # def edit
-  # end
+  def set_conversation
+    @conversation = current_user.conversations.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to conversations_path, alert: "Conversation not found"
+  end
 
-  # def update
-  # end
-# ----------------------------------------------------------------------------------#
+  def conversation_params
+    params.require(:conversation).permit(:title)
+  end
 end
