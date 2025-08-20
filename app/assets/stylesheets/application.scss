@@ -10,3 +10,8 @@
 // Your CSS partials
 @import "components/index";
 @import "pages/index";
+
+.chat-screen {
+  height: 100vh;
+  height: 100dvh; /* modern mobile browsers */
+}

@@ -1,4 +1,4 @@
-<div class="container py-4 d-flex flex-column" style="height: 100vh;">
+<div class="container py-4 d-flex flex-column chat-screen">
   <!-- Header -->
   <div class="d-flex align-items-center mb-3">
     <h1 class="h3 m-0"><%= @conversation.title.presence || "Conversation ##{@conversation.id}" %></h1>
@@ -39,7 +39,9 @@
     <% else %>
       <p class="text-muted mb-0">No messages yet. Start the conversation below.</p>
     <% end %>
+    <div id="bottom" class="mt-4"></div>
   </div>
+
   <!-- Input at bottom -->
   <%= simple_form_for [@conversation, @response], html: { class: "d-flex gap-2", id: "new-response-form" } do |f| %>
     <%= f.input :content, label: false, wrapper_html: {  class: "flex-grow-1", style: 'margin-bottom: 0 !important;' }, input_html: { rows: 3, placeholder: "Type your message…", class: "flex-grow-1", id: "response-content" } %>
@@ -47,25 +49,22 @@
     <%= f.submit "Send", class: "btn btn-primary" %>
   <% end %>
   <%# TODO: This should be Stimulus %>
+
   <!-- Page-load smooth autoscroll + autofocus + Ctrl/Cmd+Enter -->
   <script>
     document.addEventListener("turbo:load", () => {
-      const messages = document.getElementById("messages");
-      if (messages) {
-        messages.scrollTo({ top: messages.scrollHeight, behavior: "smooth" });
-      }
-      const textarea = document.getElementById("response-content");
-      if (textarea) textarea.focus();
+    const bottom = document.getElementById("bottom");
+    if (bottom) bottom.scrollIntoView({ block: "end" });
 
+    const textarea = document.getElementById("response-content");
+    if (textarea) {
+      textarea.focus();
       // Ctrl/Cmd+Enter to submit
       const form = document.getElementById("new-response-form");
-      if (form && textarea) {
-        textarea.addEventListener("keydown", (e) => {
-          if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
-            form.requestSubmit();
-          }
-        });
-      }
-    });
+      textarea.addEventListener("keydown", (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key === "Enter") form.requestSubmit();
+      });
+    }
+      });
   </script>
 </div>
