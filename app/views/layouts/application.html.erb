@@ -9,6 +9,44 @@
     <%= javascript_importmap_tags %>
   </head>
   <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top shadow-sm">
+      <div class="container-fluid">
+        <%= link_to "Robobo", root_path, class: "navbar-brand" %>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <% if user_signed_in? %>
+              <li class="nav-item d-flex align-items-center">
+                <%= link_to user_path(current_user), class: "nav-link d-flex align-items-center gap-2" do %>
+                  <i class="fa-solid fa-circle-user fa-lg"></i>
+                  <span>
+                    <%= current_user.name.presence || "User" %>
+                    <% if current_user.jlpt_level.present? %>
+                      (JLPT <%= current_user.jlpt_level %>)
+                    <% end %>
+                  </span>
+                <% end %>
+              </li>
+              <li class="nav-item">
+                <%= link_to "Logout",
+                        destroy_user_session_path,
+                        data: { turbo_method: :delete },
+                        class: "nav-link" %>
+              </li>
+            <% else %>
+              <li class="nav-item">
+                <%= link_to "Sign up", new_user_registration_path, class: "nav-link" %>
+              </li>
+              <li class="nav-item">
+                <%= link_to "Login", new_user_session_path, class: "nav-link" %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </nav>
     <%= yield %>
     <% flash.each do |key, value| %>
       <div class="alert <%= bootstrap_class_for_flash(key) %> alert-dismissible fade show" role="alert">
