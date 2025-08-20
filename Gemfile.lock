@@ -167,6 +167,10 @@ GEM
     jbuilder (2.14.1)
       actionview (>= 7.0.0)
       activesupport (>= 7.0.0)
+    kramdown (2.5.1)
+      rexml (>= 3.3.9)
+    kramdown-parser-gfm (1.1.0)
+      kramdown (~> 2.0)
     json (2.13.2)
     logger (1.7.0)
     loofah (2.24.1)
@@ -213,6 +217,7 @@ GEM
     nokogiri (1.18.9-x86_64-linux-musl)
       racc (~> 1.4)
     orm_adapter (0.5.0)
+    ostruct (0.6.3)
     pg (1.6.1)
     pg (1.6.1-aarch64-linux)
     pg (1.6.1-aarch64-linux-musl)
@@ -279,6 +284,7 @@ GEM
       actionpack (>= 5.2)
       railties (>= 5.2)
     rexml (3.4.1)
+    rouge (4.6.0)
     ruby_llm (1.6.3)
       base64
       event_stream_parser (~> 1)
@@ -363,9 +369,13 @@ DEPENDENCIES
   font-awesome-sass (~> 6.1)
   importmap-rails
   jbuilder
+  kramdown
+  kramdown-parser-gfm
+  ostruct
   pg (~> 1.1)
   puma (>= 5.0)
   rails (~> 7.1.5, >= 7.1.5.2)
+  rouge
   ruby_llm
   sassc-rails
   selenium-webdriver

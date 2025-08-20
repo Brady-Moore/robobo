@@ -4,9 +4,11 @@
     <h1 class="h3 m-0"><%= @conversation.title.presence || "Conversation ##{@conversation.id}" %></h1>
     <div class="ms-auto">
       <%= link_to "All Conversations", conversations_path, class: "btn btn-outline-secondary btn-sm me-2" %>
-      <%= link_to "Delete", conversation_path(@conversation),
-            class: "btn btn-outline-danger btn-sm",
-            data: { turbo_method: :delete, turbo_confirm: "Delete this conversation?" } %>
+      <%= link_to conversation_path(@conversation),
+            class: "btn btn-outline-secondary btn-sm",
+            data: { turbo_method: :delete, turbo_confirm: "Delete this conversation?" } do %>
+        <i class="fa-solid fa-trash-can"></i>
+      <% end %>
     </div>
   </div>
   <!-- Submitted text -->
@@ -24,12 +26,12 @@
       <div class="d-flex flex-column gap-3">
         <% @responses.each do |r| %>
           <div class="d-flex <%= r.from_user ? 'justify-content-end' : 'justify-content-start' %>">
-            <div class="<%= r.from_user ? 'bg-primary text-white' : 'bg-white' %> rounded-3 px-3 py-2 shadow-sm" style="max-width: 720px;">
+            <div class="chat-bubble <%= r.from_user ? 'user' : 'ai' %>">
               <div class="small <%= r.from_user ? 'text-white-50' : 'text-muted' %> mb-1">
                 <%= r.from_user ? (current_user.name.presence || "You") : "Robobo" %>
                 · <%= time_ago_in_words(r.created_at) %> ago
               </div>
-              <div style="white-space: pre-wrap;"><%= r.content %></div>
+              <div style="white-space: pre-wrap;"><%= raw(render_markdown(r.content)) %></div>
             </div>
           </div>
         <% end %>
@@ -39,25 +41,15 @@
     <% end %>
     <div id="bottom" class="mt-4"></div>
   </div>
-  <!------------------------------------------------------------------------------------------------------------------------------->
-<!------------------------------------------------------------------------------------------------------------------------------->
+
   <!-- Input at bottom -->
-  <div class="card position-sticky bottom-0 shadow-sm" style="z-index: 100;">
-    <div class="card-body">
-      <%= form_with model: [@conversation, @response], local: true, class: "d-flex gap-2", id: "new-response-form" do |f| %>
-        <div class="visually-hidden">
-          <%= f.label :content, "Your message" %>
-        </div>
-        <%= f.text_area :content,
-              rows: 2,
-              class: "form-control flex-grow-1",
-              placeholder: "Type your message…",
-              aria: { label: "Your message" },
-              id: "response-content" %>
-        <%= f.submit "Send", class: "btn btn-primary" %>
-      <% end %>
-    </div>
-  </div>
+  <%= simple_form_for [@conversation, @response], html: { class: "d-flex gap-2", id: "new-response-form" } do |f| %>
+    <%= f.input :content, label: false, wrapper_html: {  class: "flex-grow-1", style: 'margin-bottom: 0 !important;' }, input_html: { rows: 3, placeholder: "Type your message…", class: "flex-grow-1", id: "response-content" } %>
+    <%= f.hidden_field :from_user, value: true %>
+    <%= f.submit "Send", class: "btn btn-primary" %>
+  <% end %>
+  <%# TODO: This should be Stimulus %>
+
   <!-- Page-load smooth autoscroll + autofocus + Ctrl/Cmd+Enter -->
   <script>
     document.addEventListener("turbo:load", () => {
