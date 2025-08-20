@@ -1,2 +1,52 @@
-<h1>Conversations#new</h1>
-<p>Find me in app/views/conversations/new.html.erb</p>
+<div class="container py-5">
+  <div class="d-flex align-items-center mb-4">
+    <h1 class="m-0">Start a New Conversation</h1>
+    <div class="ms-auto">
+      <%= link_to "Our Past Conversations", conversations_path, class: "btn btn-outline-secondary btn-sm" if user_signed_in? %>
+    </div>
+  </div>
+  <% if user_signed_in? %>
+    <!-- Signed-in: show the form -->
+    <div class="card mb-5">
+      <div class="card-body">
+        <%= form_with model: @conversation, url: conversations_path, local: true do |f| %>
+          <div class="mb-3">
+            <%= f.label :title, "Title (optional)" %>
+            <%= f.text_field :title, class: "form-control", placeholder: "e.g., Reading practice on 〜ている" %>
+          </div>
+          <div class="mb-3">
+            <%= f.label :submitted_text, "Your Japanese Text" %>
+            <%= f.text_area :submitted_text, class: "form-control", rows: 6,
+                  placeholder: "貼り付けてください（Paste your Japanese text here）" %>
+          </div>
+          <div class="d-flex gap-2">
+            <%= f.submit "Start Conversation", class: "btn btn-primary" %>
+            <%= link_to "Cancel", conversations_path, class: "btn btn-outline-secondary" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% else %>
+    <!-- Guest: CTA to log in or sign up -->
+    <div class="text-center mb-4">
+      <p class="lead mb-3">Please log in or sign up to start chatting with Robobo:</p>
+      <%= link_to "Log In", new_user_session_path, class: "btn btn-outline-primary me-2" %>
+      <%= link_to "Sign Up", new_user_registration_path, class: "btn btn-primary" %>
+    </div>
+    <!-- Demo conversation -->
+    <% if defined?(@demo_conversation) && @demo_conversation.present? %>
+      <hr class="my-5" />
+      <h2 class="h4 mb-3">💬 Demo Conversation</h2>
+      <div class="list-group">
+        <% @demo_conversation.responses.order(:created_at).each do |r| %>
+          <div class="list-group-item d-flex <%= r.from_user ? 'justify-content-end' : 'justify-content-start' %>">
+            <div class="<%= r.from_user ? 'bg-primary text-white' : 'bg-light' %> rounded-3 px-3 py-2" style="max-width: 720px;">
+              <div class="small text-muted mb-1"><%= r.from_user ? "You" : "Robobo" %></div>
+              <div><%= r.content %></div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
+</div>

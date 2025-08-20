@@ -1,2 +1,79 @@
-<h1>Conversations#show</h1>
-<p>Find me in app/views/conversations/show.html.erb</p>
+<div class="container py-4 d-flex flex-column" style="height: 100vh;">
+  <!-- Header -->
+  <div class="d-flex align-items-center mb-3">
+    <h1 class="h3 m-0"><%= @conversation.title.presence || "Conversation ##{@conversation.id}" %></h1>
+    <div class="ms-auto">
+      <%= link_to "All Conversations", conversations_path, class: "btn btn-outline-secondary btn-sm me-2" %>
+      <%= link_to "Delete", conversation_path(@conversation),
+            class: "btn btn-outline-danger btn-sm",
+            data: { turbo_method: :delete, turbo_confirm: "Delete this conversation?" } %>
+    </div>
+  </div>
+  <!-- Submitted text -->
+  <% if @conversation.submitted_text.present? %>
+    <div class="card mb-3">
+      <div class="card-header fw-semibold">Original Text</div>
+      <div class="card-body">
+        <pre class="mb-0" style="white-space: pre-wrap;"><%= @conversation.submitted_text %></pre>
+      </div>
+    </div>
+  <% end %>
+  <!-- Messages (scrollable) -->
+  <div id="messages" class="flex-grow-1 overflow-auto mb-3 border rounded p-3 bg-light">
+    <% if @responses.any? %>
+      <div class="d-flex flex-column gap-3">
+        <% @responses.each do |r| %>
+          <div class="d-flex <%= r.from_user ? 'justify-content-end' : 'justify-content-start' %>">
+            <div class="<%= r.from_user ? 'bg-primary text-white' : 'bg-white' %> rounded-3 px-3 py-2 shadow-sm" style="max-width: 720px;">
+              <div class="small <%= r.from_user ? 'text-white-50' : 'text-muted' %> mb-1">
+                <%= r.from_user ? (current_user.name.presence || "You") : "Robobo" %>
+                · <%= time_ago_in_words(r.created_at) %> ago
+              </div>
+              <div style="white-space: pre-wrap;"><%= r.content %></div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="text-muted mb-0">No messages yet. Start the conversation below.</p>
+    <% end %>
+  </div>
+  <!-- Input at bottom -->
+  <div class="card">
+    <div class="card-body">
+      <%= form_with model: [@conversation, @response], local: true, class: "d-flex gap-2", id: "new-response-form" do |f| %>
+        <div class="visually-hidden">
+          <%= f.label :content, "Your message" %>
+        </div>
+        <%= f.text_area :content,
+              rows: 2,
+              class: "form-control flex-grow-1",
+              placeholder: "Type your message…",
+              aria: { label: "Your message" },
+              id: "response-content" %>
+        <%= f.submit "Send", class: "btn btn-primary" %>
+      <% end %>
+    </div>
+  </div>
+  <!-- Page-load smooth autoscroll + autofocus + Ctrl/Cmd+Enter -->
+  <script>
+    document.addEventListener("turbo:load", () => {
+      const messages = document.getElementById("messages");
+      if (messages) {
+        messages.scrollTo({ top: messages.scrollHeight, behavior: "smooth" });
+      }
+      const textarea = document.getElementById("response-content");
+      if (textarea) textarea.focus();
+
+      // Ctrl/Cmd+Enter to submit
+      const form = document.getElementById("new-response-form");
+      if (form && textarea) {
+        textarea.addEventListener("keydown", (e) => {
+          if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+            form.requestSubmit();
+          }
+        });
+      }
+    });
+  </script>
+</div>
