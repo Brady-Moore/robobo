@@ -1,0 +1,20 @@
+.chat-bubble {
+  max-width: 720px;
+  padding: 0.75rem 1rem;
+  border-radius: 1rem;
+  box-shadow: 0 2px 4px $gray;
+}
+
+/* User messages (blue, right side) */
+.chat-bubble.user {
+  background-color: $blue; /* Bootstrap primary */
+  color: $white;
+  border-bottom-right-radius: 0.25rem;
+}
+
+/* AI messages (light gray, left side) */
+.chat-bubble.ai {
+  background-color: $mid-gray; /* Bootstrap light */
+  color: $dark-blue;
+  border-bottom-left-radius: 0.25rem;
+}

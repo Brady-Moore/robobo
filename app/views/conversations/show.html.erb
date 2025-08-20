@@ -26,7 +26,7 @@
       <div class="d-flex flex-column gap-3">
         <% @responses.each do |r| %>
           <div class="d-flex <%= r.from_user ? 'justify-content-end' : 'justify-content-start' %>">
-            <div class="bg-white rounded-3 px-3 py-2 shadow-sm" style="max-width: 720px;">
+            <div class="chat-bubble <%= r.from_user ? 'user' : 'ai' %>">
               <div class="small <%= r.from_user ? 'text-white-50' : 'text-muted' %> mb-1">
                 <%= r.from_user ? (current_user.name.presence || "You") : "Robobo" %>
                 · <%= time_ago_in_words(r.created_at) %> ago
