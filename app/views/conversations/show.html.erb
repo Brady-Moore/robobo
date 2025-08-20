@@ -1,31 +1,71 @@
-<div class="container my-4">
-  <div class="text-center">
-    <h1><%= @conversation.title %></h1>
-    <p><%= @conversation.submitted_text %></p>
-    <p><%= @conversation.sentence_prompt %></p>
-  </div>
-  <h2>Conversation</h2>
-  <div>
-    <% @responses.each do |response| %>
-      <% if response.from_user? %>
-        <div class="d-flex justify-content-end mb-2">
-          <div class="bg-light-gray px-3 pb-0 pt-3 rounded-pill">
-            <%= raw(render_markdown(response.content)) %>
-          </div>
-        </div>
-      <% else %>
-        <div class="d-flex justify-content-start mb-5">
-          <div class="bg-light-gray px-3 pb-0 pt-3 rounded">
-            <%= raw(render_markdown(response.content)) %>
-          </div>
-        </div>
+<div class="container py-4 d-flex flex-column" style="height: 100vh;">
+  <!-- Header -->
+  <div class="d-flex align-items-center mb-3">
+    <h1 class="h3 m-0"><%= @conversation.title.presence || "Conversation ##{@conversation.id}" %></h1>
+    <div class="ms-auto">
+      <%= link_to "All Conversations", conversations_path, class: "btn btn-outline-secondary btn-sm me-2" %>
+      <%= link_to conversation_path(@conversation),
+            class: "btn btn-outline-secondary btn-sm",
+            data: { turbo_method: :delete, turbo_confirm: "Delete this conversation?" } do %>
+        <i class="fa-solid fa-trash-can"></i>
       <% end %>
+    </div>
+  </div>
+  <!-- Submitted text -->
+  <% if @conversation.submitted_text.present? %>
+    <div class="card mb-3">
+      <div class="card-header fw-semibold">Original Text</div>
+      <div class="card-body">
+        <pre class="mb-0" style="white-space: pre-wrap;"><%= @conversation.submitted_text %></pre>
+      </div>
+    </div>
+  <% end %>
+  <!-- Messages (scrollable) -->
+  <div id="messages" class="flex-grow-1 overflow-auto mb-3 border rounded p-3 bg-light">
+    <% if @responses.any? %>
+      <div class="d-flex flex-column gap-3">
+        <% @responses.each do |r| %>
+          <div class="d-flex <%= r.from_user ? 'justify-content-end' : 'justify-content-start' %>">
+            <div class="bg-white rounded-3 px-3 py-2 shadow-sm" style="max-width: 720px;">
+              <div class="small <%= r.from_user ? 'text-white-50' : 'text-muted' %> mb-1">
+                <%= r.from_user ? (current_user.name.presence || "You") : "Robobo" %>
+                · <%= time_ago_in_words(r.created_at) %> ago
+              </div>
+              <div style="white-space: pre-wrap;"><%= raw(render_markdown(r.content)) %></div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="text-muted mb-0">No messages yet. Start the conversation below.</p>
     <% end %>
   </div>
-  <h3>Add Response</h3>
-  <%= simple_form_for [@conversation, @response] do |f| %>
-    <%= f.input :content %>
+  <!-- Input at bottom -->
+  <%= simple_form_for [@conversation, @response], html: { class: "d-flex gap-2", id: "new-response-form" } do |f| %>
+    <%= f.input :content, label: false, wrapper_html: {  class: "flex-grow-1", style: 'margin-bottom: 0 !important;' }, input_html: { rows: 3, placeholder: "Type your message…", class: "flex-grow-1", id: "response-content" } %>
     <%= f.hidden_field :from_user, value: true %>
-    <%= f.submit "Send", class: "btn btn-secondary shadow-sm" %>
+    <%= f.submit "Send", class: "btn btn-primary" %>
   <% end %>
+  <%# TODO: This should be Stimulus %>
+  <!-- Page-load smooth autoscroll + autofocus + Ctrl/Cmd+Enter -->
+  <script>
+    document.addEventListener("turbo:load", () => {
+      const messages = document.getElementById("messages");
+      if (messages) {
+        messages.scrollTo({ top: messages.scrollHeight, behavior: "smooth" });
+      }
+      const textarea = document.getElementById("response-content");
+      if (textarea) textarea.focus();
+
+      // Ctrl/Cmd+Enter to submit
+      const form = document.getElementById("new-response-form");
+      if (form && textarea) {
+        textarea.addEventListener("keydown", (e) => {
+          if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+            form.requestSubmit();
+          }
+        });
+      }
+    });
+  </script>
 </div>
