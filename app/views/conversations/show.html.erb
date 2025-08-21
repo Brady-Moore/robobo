@@ -25,15 +25,17 @@
     <% if @responses.any? %>
       <div class="d-flex flex-column gap-3">
         <% @responses.each do |r| %>
-          <div class="d-flex <%= r.from_user ? 'justify-content-end' : 'justify-content-start' %>">
-            <div class="chat-bubble <%= r.from_user ? 'user' : 'ai' %>">
-              <div class="small <%= r.from_user ? 'text-white-50' : 'text-muted' %> mb-1">
-                <%= r.from_user ? (current_user.name.presence || "You") : "Robobo" %>
-                · <%= time_ago_in_words(r.created_at) %> ago
+          <% unless r.role == "system" %>
+            <div class="d-flex <%= r.role == "user" ? 'justify-content-end' : 'justify-content-start' %>">
+              <div class="chat-bubble <%= r.role == "user" ? 'user' : 'ai' %>">
+                <div class="small <%= r.role == "user" ? 'text-white-50' : 'text-muted' %> mb-1">
+                  <%= r.role == "user" ? (current_user.name.presence || "You") : "Robobo" %>
+                  · <%= time_ago_in_words(r.created_at) %> ago
+                </div>
+                <div style="white-space: pre-wrap;"><%= raw(render_markdown(r.content)) %></div>
               </div>
-              <div style="white-space: pre-wrap;"><%= raw(render_markdown(r.content)) %></div>
             </div>
-          </div>
+          <% end %>
         <% end %>
       </div>
     <% else %>
@@ -45,7 +47,7 @@
   <!-- Input at bottom -->
   <%= simple_form_for [@conversation, @response], html: { class: "d-flex gap-2", id: "new-response-form" } do |f| %>
     <%= f.input :content, label: false, wrapper_html: {  class: "flex-grow-1", style: 'margin-bottom: 0 !important;' }, input_html: { rows: 3, placeholder: "Type your message…", class: "flex-grow-1", id: "response-content" } %>
-    <%= f.hidden_field :from_user, value: true %>
+    <%= f.hidden_field :role, value: "user" %>
     <%= f.submit "Send", class: "btn btn-primary" %>
   <% end %>
   <%# TODO: This should be Stimulus %>
