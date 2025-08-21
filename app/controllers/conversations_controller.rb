@@ -19,7 +19,9 @@ class ConversationsController < ApplicationController
 
   def create
     @conversation = current_user.conversations.new(conversation_params)
+    @response = Response.new(content: @conversation.submitted_text, role: "user", conversation: @conversation)
     if @conversation.save
+      AiMessageService.new(@response).call
       redirect_to @conversation, notice: "Conversation started!"
     else
       render :new, status: :unprocessable_content
