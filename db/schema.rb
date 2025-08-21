@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_08_20_004151) do
+ActiveRecord::Schema[7.1].define(version: 2025_08_21_031049) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -27,10 +27,26 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_20_004151) do
   create_table "responses", force: :cascade do |t|
     t.bigint "conversation_id", null: false
     t.text "content"
-    t.boolean "from_user"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "role"
+    t.string "model_id"
+    t.integer "input_tokens"
+    t.integer "output_tokens"
+    t.bigint "tool_call_id"
     t.index ["conversation_id"], name: "index_responses_on_conversation_id"
+    t.index ["tool_call_id"], name: "index_responses_on_tool_call_id"
+  end
+
+  create_table "tool_calls", force: :cascade do |t|
+    t.bigint "response_id", null: false
+    t.string "tool_call_id"
+    t.string "name"
+    t.jsonb "arguments"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["response_id"], name: "index_tool_calls_on_response_id"
+    t.index ["tool_call_id"], name: "index_tool_calls_on_tool_call_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -49,4 +65,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_20_004151) do
 
   add_foreign_key "conversations", "users"
   add_foreign_key "responses", "conversations"
+  add_foreign_key "responses", "tool_calls"
+  add_foreign_key "tool_calls", "responses"
 end
