@@ -6,7 +6,7 @@ class ResponsesController < ApplicationController
     @response = Response.new(response_params)
     @response.conversation = @conversation
     @response.from_user = true
-    
+
     if @response.save
       @ai = AiMessageService.new(@response).call
       redirect_to conversation_path(@conversation, anchor: "bottom")
@@ -16,7 +16,7 @@ class ResponsesController < ApplicationController
       render "conversations/show", status: :unprocessable_entity
     end
   end
-  
+
   private
 
   def set_conversation
