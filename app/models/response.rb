@@ -1,9 +1,8 @@
 class Response < ApplicationRecord
   acts_as_message
-
+  # enum role: {system: 0, user: 1, assistant: 2}
+  # scope :displayable, -> {where(role: [:user, :assistant])}
   belongs_to :conversation
-
-  validates :content, length: { maximum: 10000 }
 
   def chat
     self.conversation

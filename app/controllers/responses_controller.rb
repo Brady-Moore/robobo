@@ -8,7 +8,7 @@ class ResponsesController < ApplicationController
     @response.role = "user"
 
     if @response.valid?
-      @ai = AiMessageService.new(@response).call
+      AiMessageService.new(@response).call
       redirect_to conversation_path(@conversation, anchor: "bottom")
     else
       @responses = @conversation.responses.order(:created_at)

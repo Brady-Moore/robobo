@@ -22,18 +22,20 @@
   <% end %>
   <!-- Messages (scrollable) -->
   <div id="messages" class="flex-grow-1 overflow-auto mb-3 border rounded p-3 bg-light">
-    <% if @conversation.responses.any? %>
+    <% if @responses.any? %>
       <div class="d-flex flex-column gap-3">
-        <% @conversation.responses.each do |r| %>
-          <div class="d-flex <%= r.role == "user" ? 'justify-content-end' : 'justify-content-start' %>">
-            <div class="chat-bubble <%= r.role == "user" ? 'user' : 'ai' %>">
-              <div class="small <%= r.role == "user" ? 'text-white-50' : 'text-muted' %> mb-1">
-                <%= r.role == "user" ? (current_user.name.presence || "You") : "Robobo" %>
-                · <%= time_ago_in_words(r.created_at) %> ago
+        <% @responses.each do |r| %>
+          <% unless r.role == "system" %>
+            <div class="d-flex <%= r.role == "user" ? 'justify-content-end' : 'justify-content-start' %>">
+              <div class="chat-bubble <%= r.role == "user" ? 'user' : 'ai' %>">
+                <div class="small <%= r.role == "user" ? 'text-white-50' : 'text-muted' %> mb-1">
+                  <%= r.role == "user" ? (current_user.name.presence || "You") : "Robobo" %>
+                  · <%= time_ago_in_words(r.created_at) %> ago
+                </div>
+                <div style="white-space: pre-wrap;"><%= raw(render_markdown(r.content)) %></div>
               </div>
-              <div style="white-space: pre-wrap;"><%= raw(render_markdown(r.content)) %></div>
             </div>
-          </div>
+          <% end %>
         <% end %>
       </div>
     <% else %>
