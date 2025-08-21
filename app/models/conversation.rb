@@ -1,10 +1,22 @@
 class Conversation < ApplicationRecord
+  acts_as_chat
+  after_initialize :set_chat
+
   belongs_to :user
-  has_many :responses, dependent: :destroy
+  has_many :messages, class_name: "Response", dependent: :destroy
 
   validates :title, length: { maximum: 50 }, allow_blank: true
 
   before_create :set_default_title
+
+    def set_chat
+    @chat = RubyLLM.chat
+    end
+
+    def responses
+      self.messages
+    end
+
 
   private
 
