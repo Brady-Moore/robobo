@@ -6,15 +6,18 @@
   <% if @conversations.any? %>
     <% @conversations.each do |conversation| %>
       <div class="row my-3">
-        <div class="col-2 d-flex justify-content-center align-items-center">
-          <i class="fa-solid fa-book text-primary fs-1"></i>
-        </div>
-        <div class="col-10 d-flex align-items-center">
+        <div class="col-12 d-flex align-items-center">
+          <i class="fa-solid fa-book text-primary fs-1 me-2"></i>
           <%= link_to conversation_path(conversation), class: "w-100 text-decoration-none text-dark" do %>
             <div class="title-wrapper">
               <h3 class="m-0"><%= conversation.title.presence || "Conversation ##{conversation.id}".truncate(80) %></h3>
             </div>
           <% end %>
+          <div class="d-flex bg-primary text-light align-items-center rounded-5 px-2 rounded-start h-100">
+            <%= link_to conversation_path(conversation), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "text-light text-decoration-none" do %>
+              <i class="fa-solid fa-xmark"></i>
+            <% end %>
+          </div>
         </div>
       </div>
     <% end %>

@@ -28,7 +28,7 @@ class ConversationsController < ApplicationController
 
   def destroy
     @conversation.destroy
-    redirect_to conversations_path, notice: "Conversation deleted"
+    redirect_to conversations_path, status: :see_other, notice: "Conversation deleted"
   end
 
   private
