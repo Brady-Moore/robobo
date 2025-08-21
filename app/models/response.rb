@@ -1,16 +1,20 @@
 class Response < ApplicationRecord
   acts_as_message
 
+  belongs_to :conversation
+
+  validates :content, length: { maximum: 10000 }
+
   def chat
     self.conversation
   end
 
-  belongs_to :conversation
-
-  validates :content, presence: true, length: { maximum: 1000 }
+  def message
+    self
+  end
 
   def build_prompt
-     prompt= <<-PROMPT
+     <<-PROMPT
       You are a knowledgeable and engaging teacher of Japanese grammar and kanji.
       The user’s level is #{conversation.user.jlpt_level}.
       Adjust your explanations according to the user’s level:

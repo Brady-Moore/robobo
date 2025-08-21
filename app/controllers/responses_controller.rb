@@ -7,13 +7,13 @@ class ResponsesController < ApplicationController
     @response.conversation = @conversation
     @response.role = "user"
 
-    if @response.save
+    if @response.valid?
       @ai = AiMessageService.new(@response).call
       redirect_to conversation_path(@conversation, anchor: "bottom")
     else
       @responses = @conversation.responses.order(:created_at)
       flash.now[:alert] = "Could not send message."
-      render "conversations/show", status: :unprocessable_entity
+      render "conversations/show", status: :unprocessable_content
     end
   end
 
@@ -24,6 +24,6 @@ class ResponsesController < ApplicationController
   end
 
   def response_params
-    params.require(:response).permit(:content)
+    params.require(:response).permit(:content, :role)
   end
 end

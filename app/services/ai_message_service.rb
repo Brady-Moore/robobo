@@ -8,6 +8,6 @@ class AiMessageService
     prompt = @response.build_prompt
     # response = RubyLLM.chat.with_instructions(prompt).ask(@response.content)
     # Response.create(content: response.content, conversation: @response.conversation, from_user:  false)
-    Response.chat.with_instructions(prompt).ask(@response.content)
+    @response.chat.with_instructions(prompt).ask(@response.content)
   end
 end

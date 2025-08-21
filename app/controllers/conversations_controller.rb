@@ -22,7 +22,7 @@ class ConversationsController < ApplicationController
     if @conversation.save
       redirect_to @conversation, notice: "Conversation started!"
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
@@ -40,6 +40,6 @@ class ConversationsController < ApplicationController
   end
 
   def conversation_params
-    params.require(:conversation).permit(:title)
+    params.require(:conversation).permit(:title, :submitted_text)
   end
 end
