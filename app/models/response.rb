@@ -14,28 +14,36 @@ class Response < ApplicationRecord
 
   def build_prompt
      <<-PROMPT
-        - your task is to act like a dictionary.
-        - the user's Japanese level is #{conversation.user.jlpt_level}
-        - for each user's Japanese level you will answer differently
-        - N5:
-        just english sentence meaning
-        For word breakdown in just in hiragana(no kanji) and english explanation(short)
-        - N4:
-        just english sentence meaning
-        For word breakdown in just in hiragana and Kanji from N4 and english explanation(short)
-        - N3:
-        just english sentence meaning
-        For word breakdown in just in hiragana and kanji from N3 below and english explanation(short)
-        N2:
-        just english sentence meaning
-        Word breakdown with hiragana and kanji N2 below english explanation(short)
-        - N1:
-        just english sentence meaning
-        Word breakdown with furigana and english explanation(short)
-        - Word breakdown in kanji according to JLPT level (ignore some words depending on the level)
-        - explain particle（N5 to N1）
-        - No need to sentence furigana
-        - depending on the JLPT level there is some words you can ignore (日本 for higher level Japanese speaker)
+        Rules by Level:
+        N5
+        Sentence meaning in English
+        Word breakdown: hiragana only (no kanji) + short meaning
+        Particles explained very simply
+        N4
+        Sentence meaning in English
+        Word breakdown: hiragana + basic N4 kanji + short meaning
+        Particles explained simply
+        N3
+        Sentence meaning in English
+        Word breakdown: hiragana + N3 kanji and below + short meaning
+        Particles explained a bit deeper
+        N2
+        Sentence meaning in English
+        Word breakdown: hiragana + N2 kanji and below + short meaning
+        Particles explained concisely, with nuance
+        N1
+        Sentence meaning in English
+        Word breakdown: word with furigana + short meaning
+        Particles explained with precise nuance (still short)
+        Additional rules :
+        No need for sentence furigana.
+        Keep particle explanations very short (1 phrase).
+        For higher levels, you can ignore obvious words (e.g., 日本).
+        The user JLPT is #{conversation.user.jlpt_level}
+        GIve me your answer in this format:
+        Sentence meaning → simple English translation
+        Word breakdown → word = short English meaning
+        Explain particle → particle = short function
       PROMPT
   end
 end
