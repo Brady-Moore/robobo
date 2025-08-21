@@ -1,4 +1,5 @@
 class Response < ApplicationRecord
+  acts_as_message
   belongs_to :conversation
 
   validates :content, presence: true, length: { maximum: 1000 }
