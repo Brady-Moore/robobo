@@ -1,9 +1,13 @@
 class Response < ApplicationRecord
   acts_as_message
+
+  def chat
+    self.conversation
+  end
+
   belongs_to :conversation
 
   validates :content, presence: true, length: { maximum: 1000 }
-  validates :from_user, inclusion: { in: [true, false] }
 
   def build_prompt
      prompt= <<-PROMPT

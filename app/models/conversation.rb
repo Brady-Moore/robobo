@@ -1,5 +1,11 @@
 class Conversation < ApplicationRecord
   acts_as_chat
+  after_initialize :set_chat
+
+  def set_chat
+    @chat = RubyLLM.chat
+  end
+
   belongs_to :user
   has_many :responses, dependent: :destroy
 

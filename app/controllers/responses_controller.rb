@@ -5,7 +5,7 @@ class ResponsesController < ApplicationController
   def create
     @response = Response.new(response_params)
     @response.conversation = @conversation
-    @response.from_user = true
+    @response.role = "user"
 
     if @response.save
       @ai = AiMessageService.new(@response).call
