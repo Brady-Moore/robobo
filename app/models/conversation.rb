@@ -22,7 +22,7 @@ class Conversation < ApplicationRecord
 
   def set_default_title
     if title.blank?
-      self.title = "Started on #{created_at&.strftime('%b %d, %Y') || Date.today.strftime('%b %d, %Y')}"
+      self.title = "Started on #{created_at&.strftime('%b %d') || Date.today.strftime('%b %d')}"
     end
   end
 end

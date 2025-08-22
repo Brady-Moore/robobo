@@ -19,4 +19,8 @@
   border-bottom-left-radius: 0.25rem;
 }
 
-/* app/assets/stylesheets/application.scss */
+
+.chat-screen {
+  height: 100vh;
+  height: calc(100dvh - 56px);/* modern mobile browsers */
+}
