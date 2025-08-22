@@ -13,5 +13,5 @@
 
 .chat-screen {
   height: 100vh;
-  height: 100dvh; /* modern mobile browsers */
+  height: calc(100dvh - 56px);/* modern mobile browsers */
 }
