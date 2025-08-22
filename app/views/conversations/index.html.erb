@@ -13,11 +13,11 @@
               <h3 class="m-0"><%= conversation.title.presence || "Conversation ##{conversation.id}".truncate(80) %></h3>
             </div>
           <% end %>
-          <div class="d-flex bg-primary text-light align-items-center rounded-5 px-2 rounded-start h-100">
-            <%= link_to conversation_path(conversation), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "text-light text-decoration-none" do %>
-              <i class="fa-solid fa-xmark"></i>
-            <% end %>
-          </div>
+          <%= link_to conversation_path(conversation),
+              data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
+              class: "d-flex bg-primary text-light align-items-center rounded-5 px-2 rounded-start h-100 text-light text-decoration-none" do %>
+            <i class="fa-solid fa-xmark"></i>
+          <% end %>
         </div>
       </div>
     <% end %>
