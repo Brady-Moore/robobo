@@ -15,7 +15,8 @@ class ConversationsController < ApplicationController
   def new
     @conversation = Conversation.new
     @demo_conversation = Conversation.find_by(title: "Demo Conversation")
-    @conversations = current_user.conversations.order(created_at: :desc)
+    @conversations = current_user.conversations&.order(created_at: :desc)
+    # @conversations = Conversation.where(user: current_user)
   end
 
   def create
