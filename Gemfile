@@ -78,4 +78,4 @@ gem "kramdown"
 gem "rouge"
 gem "kramdown-parser-gfm"
 gem "ostruct"
-gem "ruby_llm"
+gem "ruby_llm", git: 'https://github.com/SuzukiRyuichiro/ruby_llm.git'
