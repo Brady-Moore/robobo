@@ -31,9 +31,53 @@
         <% end %>
       </div>
     </div>
+    <%# -------------------------------------------------------------------------------------------------------- %>
     <div class="d-flex justify-content-end">
-      <%= link_to "Our Past Conversations", conversations_path, class: "btn btn-outline-secondary btn-sm" if user_signed_in? %>
+      <%#= link_to "Our Past Conversations", conversations_path, class: "btn btn-outline-secondary btn-sm" if user_signed_in? %>
+      <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Our past conversations</button>
+
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+          <div class="offcanvas-header">
+            <h5 id="offcanvasRightLabel">Our past conversations</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+          <%#  %>
+          <div class="container my-4">
+            <div class="d-flex justify-content-center align-items-center">
+              <%= image_tag "robobo.png", alt: "Robobo Mascot", width: 80 %>
+              <h1 class="m-0">Our Conversations</h1>
+            </div>
+            <% if @conversations.any? %>
+              <% @conversations.each do |conversation| %>
+                <div class="row my-3">
+                  <div class="col-12 d-flex align-items-center">
+                    <i class="fa-solid fa-book text-primary fs-1 me-2"></i>
+                    <%= link_to conversation_path(conversation), class: "w-100 text-decoration-none text-dark" do %>
+                      <div class="title-wrapper">
+                        <h3 class="m-0"><%= conversation.title.presence || "Conversation ##{conversation.id}".truncate(80) %></h3>
+                      </div>
+                    <% end %>
+                    <%= link_to conversation_path(conversation),
+                        data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
+                        class: "d-flex bg-primary text-light align-items-center rounded-5 px-2 rounded-start h-100 text-light text-decoration-none" do %>
+                      <i class="fa-solid fa-xmark"></i>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+            <% else %>
+              <div class="text-center text-muted py-5 border rounded">
+                <p class="mb-3">No conversations yet.</p>
+                <%= link_to "Start your first conversation", new_conversation_path, class: "btn btn-primary" %>
+              </div>
+            <% end %>
+</div>
+          <%#  %>
+          </div>
+        </div>
     </div>
+    <%# -------------------------------------------------------------------------------------------------------- %>
   <% else %>
     <!-- Guest: CTA to log in or sign up -->
     <div class="text-center mb-5">
