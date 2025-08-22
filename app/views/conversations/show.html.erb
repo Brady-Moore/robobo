@@ -27,7 +27,7 @@
                   <%= r.role == "user" ? (current_user.name.presence || "You") : "Robobo" %>
                   · <%= time_ago_in_words(r.created_at) %> ago
                 </div>
-                <div style="white-space: pre-wrap;"><%= raw(render_markdown(r.content)) %></div>
+                <div style="col-6 msg right"><%= raw(render_markdown(r.content)) %></div>
               </div>
             </div>
           <% end %>
