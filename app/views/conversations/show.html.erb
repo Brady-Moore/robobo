@@ -12,14 +12,14 @@
     </div>
   </div>
   <!-- Submitted text -->
-  <% if @conversation.submitted_text.present? %>
-    <div class="card mb-3">
+  <%# if @conversation.submitted_text.present? %>
+    <!-- <div class="card mb-3">
       <div class="card-header fw-semibold">Original Text</div>
       <div class="card-body">
-        <pre class="mb-0" style="white-space: pre-wrap;"><%= @conversation.submitted_text %></pre>
+        <pre class="mb-0" style="white-space: pre-wrap;"><%#= @conversation.submitted_text %></pre>
       </div>
-    </div>
-  <% end %>
+    </div> -->
+  <%# end %>
   <!-- Messages (scrollable) -->
   <div id="messages" class="flex-grow-1 overflow-auto mb-3 border rounded p-3 bg-light">
     <% if @responses.any? %>
